@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terps Racing</title>
-    <!-- Add script to the <head> of your page to load the embeddable map component -->
-    <title>Terps Racing</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css" />
-    <script src="https://js.arcgis.com/4.33/"></script>
-    <script src="layer.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terps Racing</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.33/"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    #viewDiv {
+      height: 600px;
+      width: 700px;
+    }
+  </style>
 </head>
 <body>
   <h1>TR Test Map</h1>
   <p>map test</p>
-
-  <div id="viewDiv" style="height:600px;width:700px;"></div>
-
-  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css" />
-  <script src="https://js.arcgis.com/4.33/"></script>
-
+  <div id="viewDiv"></div>
   <script src="layer.js"></script>
 </body>
 </html>
