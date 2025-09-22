@@ -31,7 +31,7 @@ require([
   }
 
   const center = { x: -76.949682, y: 38.986166 };
-  const halfSize = 0.0005; 
+  const halfSize = 0.000000005; 
 
   const squarePolygon = new Polygon({
     rings: [createSquare(center, halfSize)],
