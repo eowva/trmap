@@ -29,7 +29,7 @@ const cone = new Graphic({
     symbol: {
         type: "simple-marker",
         color: "orange",
-        size: "8px",
+        size: "25px",
         outline: {
             color: "white",
     }
