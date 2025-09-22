@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terps Racing</title>
     <!-- Add script to the <head> of your page to load the embeddable map component -->
-    <script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
+    <title>Terps Racing</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.33/"></script>
     <script src="layer.js"></script>
 </head>
 <body>
-    <h1>TR Test Map</h1>
-    <p>map test</p>
-    <!-- Add custom element to <body> of your page -->
-     <arcgis-embedded-map style="height:600px;width:700px;" item-id="27dcfd39558a43bfb561ee8eb3c8b3ba" theme="light" center="-76.95069960171809,38.985754114372824" scale="1128.497176" portal-url="https://uofmd.maps.arcgis.com" ></arcgis-embedded-map>
+  <h1>TR Test Map</h1>
+  <p>map test</p>
+
+  <div id="viewDiv" style="height:600px;width:700px;"></div>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.33/"></script>
+
+  <script src="layer.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ const graphicsLayer = new GraphicsLayer();
 //     latitude: 34.027
 // };
 
-c// Make a square polygon around a center
+// Make a square polygon around a center
 function createSquare(center, halfSize) {
   // halfSize = half the side length (in degrees if using wkid 4326)
   return [
