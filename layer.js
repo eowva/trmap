@@ -11,30 +11,40 @@ const graphicsLayer = new GraphicsLayer();
 //     latitude: 34.027
 // };
 
-const symbol = {
-    type: "simple-marker",
-    color: [226, 119, 40],
-    outline: {
-        color: [255, 255, 255],
-        width: 2
-    }
-};
-
-const cone = new Graphic({
-    geometry: new Polygon({
-        type: "point",
-        x: -76.949682,
-        y: 38.986166
-    }),
-    symbol: {
-        type: "simple-marker",
-        color: "orange",
-        size: "25px",
-        outline: {
-            color: "white",
-    }
+c// Make a square polygon around a center
+function createSquare(center, halfSize) {
+  // halfSize = half the side length (in degrees if using wkid 4326)
+  return [
+    [center.x - halfSize, center.y - halfSize], // bottom-left
+    [center.x + halfSize, center.y - halfSize], // bottom-right
+    [center.x + halfSize, center.y + halfSize], // top-right
+    [center.x - halfSize, center.y + halfSize], // top-left
+    [center.x - halfSize, center.y - halfSize]  // close back
+  ];
 }
+
+const center = { x: -76.949682, y: 38.986166 };
+const halfSize = 0.005; // ~0.5 km in degrees
+
+const squarePolygon = new Polygon({
+  rings: [createSquare(center, halfSize)],
+  spatialReference: { wkid: 4326 }
 });
+
+const squareGraphic = new Graphic({
+  geometry: squarePolygon,
+  symbol: {
+    type: "simple-fill",
+    color: [255, 165, 0, 0.4], // orange, semi-transparent
+    outline: {
+      color: "white",
+      width: 2
+    }
+  }
+});
+
+// Add it to your graphics layer
+graphicsLayer.add(squareGraphic);
 
 graphicsLayer.add(graphic);
 
