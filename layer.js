@@ -63,29 +63,30 @@ require([
   ];
 }
 
-// 14.5" ~ 0.000003 degrees roughly at this latitude
-const coneHalfSize = 0.000015; 
-const coneCenter = { x: -76.9497, y: 38.9862 }; // place anywhere
-
-const conePolygon = new Polygon({
-  rings: [createSquare(coneCenter, coneHalfSize)],
+// Traffic cone as a marker (visible even at tiny real-world size)
+const conePoint = {
+  type: "point",
+  x: -76.9497,
+  y: 38.9862,
   spatialReference: { wkid: 4326 }
-});
+};
 
-const coneGraphic = new Graphic({
-  geometry: conePolygon,
+const coneMarker = new Graphic({
+  geometry: conePoint,
   symbol: {
-    type: "simple-fill",
-    color: [255, 165, 0, 0.9], // orange
+    type: "simple-marker",
+    style: "circle",       // round shape for the top-down view
+    color: [255, 165, 0, 1], // bright orange
+    size: "14px",          // screen size in pixels
     outline: {
-      color: "orange",
+      color: "white",
       width: 1
     }
   }
 });
 
-graphicsLayer.add(coneGraphic);
-  //end new file
+graphicsLayer.add(coneMarker);
+
 
   graphicsLayer.add(squareGraphic);
 
