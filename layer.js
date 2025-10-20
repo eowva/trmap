@@ -64,27 +64,35 @@ require([
 // }
 
 // Traffic cone as a marker (visible even at tiny real-world size)
-const conePoint = {
-  type: "point",
-  x: -76.9497,
-  y: 38.9862,
-  spatialReference: { wkid: 4326 }
-};
+// Array of traffic cone positions
+const conePositions = [
+  { x: -76.9497, y: 38.9862 },
+  { x: -76.9496, y: 38.9863 },
+  { x: -76.9498, y: 38.9861 },
+  { x: -76.94975, y: 38.98615 }
+];
 
-const coneMarker = new Graphic({
-  geometry: conePoint,
-  symbol: {
-    type: "text",       // use text symbol as circle
-    text: "●",
-    color: [255, 165, 0, 1],
-    font: {
-      size: "14px",
-      family: "Arial"
+// Loop through the array and create a text-based marker for each cone
+conePositions.forEach(pos => {
+  const coneMarker = new Graphic({
+    geometry: {
+      type: "point",
+      x: pos.x,
+      y: pos.y,
+      spatialReference: { wkid: 4326 }
+    },
+    symbol: {
+      type: "text",    // ASCII method
+      text: "●",        // solid circle character
+      color: [255, 165, 0, 1], // orange
+      font: {
+        size: "14px",
+        family: "Arial"
+      }
     }
-  }
+  });
+  graphicsLayer.add(coneMarker);
 });
-
-graphicsLayer.add(coneMarker);
 
 
   graphicsLayer.add(squareGraphic);
