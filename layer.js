@@ -22,46 +22,46 @@ require([
   const graphicsLayer = new GraphicsLayer();
   map.add(graphicsLayer);
 
-  function createSquare(center, halfSize) {
-    return [
-      [center.x - halfSize, center.y - halfSize], 
-      [center.x + halfSize, center.y - halfSize],
-      [center.x + halfSize, center.y + halfSize], 
-      [center.x - halfSize, center.y + halfSize], 
-      [center.x - halfSize, center.y - halfSize]  
-    ];
-  }
+//   function createSquare(center, halfSize) {
+//     return [
+//       [center.x - halfSize, center.y - halfSize], 
+//       [center.x + halfSize, center.y - halfSize],
+//       [center.x + halfSize, center.y + halfSize], 
+//       [center.x - halfSize, center.y + halfSize], 
+//       [center.x - halfSize, center.y - halfSize]  
+//     ];
+//   }
 
-  const center = { x: -76.949682, y: 38.986166 };
-  const halfSize = 0.000000005; 
+//   const center = { x: -76.949682, y: 38.986166 };
+//   const halfSize = 0.000000005; 
 
-  const squarePolygon = new Polygon({
-    rings: [createSquare(center, halfSize)],
-    spatialReference: { wkid: 4326 }
-  });
+//   const squarePolygon = new Polygon({
+//     rings: [createSquare(center, halfSize)],
+//     spatialReference: { wkid: 4326 }
+//   });
 
-  const squareGraphic = new Graphic({
-    geometry: squarePolygon,
-    symbol: {
-      type: "simple-fill",
-      color: [255, 165, 0, 0.4],
-      outline: {
-        color: "white",
-        width: 2
-      }
-    }
-  });
+//   const squareGraphic = new Graphic({
+//     geometry: squarePolygon,
+//     symbol: {
+//       type: "simple-fill",
+//       color: [255, 165, 0, 0.4],
+//       outline: {
+//         color: "white",
+//         width: 2
+//       }
+//     }
+//   });
 
   
-  function createSquare(center, halfSize) {
-  return [
-    [center.x - halfSize, center.y - halfSize],
-    [center.x + halfSize, center.y - halfSize],
-    [center.x + halfSize, center.y + halfSize],
-    [center.x - halfSize, center.y + halfSize],
-    [center.x - halfSize, center.y - halfSize]
-  ];
-}
+//   function createSquare(center, halfSize) {
+//   return [
+//     [center.x - halfSize, center.y - halfSize],
+//     [center.x + halfSize, center.y - halfSize],
+//     [center.x + halfSize, center.y + halfSize],
+//     [center.x - halfSize, center.y + halfSize],
+//     [center.x - halfSize, center.y - halfSize]
+//   ];
+// }
 
 // Traffic cone as a marker (visible even at tiny real-world size)
 const conePoint = {
@@ -74,13 +74,12 @@ const conePoint = {
 const coneMarker = new Graphic({
   geometry: conePoint,
   symbol: {
-    type: "simple-marker",
-    style: "circle",       // round shape for the top-down view
-    color: [255, 165, 0, 1], // bright orange
-    size: "14px",          // screen size in pixels
-    outline: {
-      color: "white",
-      width: 1
+    type: "text",       // use text symbol as circle
+    text: "●",
+    color: [255, 165, 0, 1],
+    font: {
+      size: "14px",
+      family: "Arial"
     }
   }
 });
