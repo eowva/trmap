@@ -64,7 +64,7 @@ require([
 }
 
 // 14.5" ~ 0.000003 degrees roughly at this latitude
-const coneHalfSize = 0.0000015; 
+const coneHalfSize = 0.000015; 
 const coneCenter = { x: -76.9497, y: 38.9862 }; // place anywhere
 
 const conePolygon = new Polygon({
@@ -78,7 +78,7 @@ const coneGraphic = new Graphic({
     type: "simple-fill",
     color: [255, 165, 0, 0.9], // orange
     outline: {
-      color: "white",
+      color: "orange",
       width: 1
     }
   }
