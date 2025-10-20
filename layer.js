@@ -66,10 +66,10 @@ require([
 // Traffic cone as a marker (visible even at tiny real-world size)
 // Array of traffic cone positions
 const conePositions = [
-  { x: -76.9497, y: 38.9862 },
-  { x: -76.9496, y: 38.9863 },
-  { x: -76.9498, y: 38.9861 },
-  { x: -76.94975, y: 38.98615 }
+  { x: -76.950166, y: 38.985882 },
+  { x: -76.950851, y: 38.985882 },
+  { x: -76.950851, y: 38.985548 },
+  { x: -76.950166, y: 38.985548 }
 ];
 
 // Loop through the array and create a text-based marker for each cone
@@ -95,6 +95,6 @@ conePositions.forEach(pos => {
 });
 
 
-  graphicsLayer.add(squareGraphic);
+  // graphicsLayer.add(squareGraphic);
 
 });
