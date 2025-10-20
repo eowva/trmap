@@ -17,6 +17,8 @@ require([
     zoom: 17
   });
 
+
+  //split into a new file from here
   const graphicsLayer = new GraphicsLayer();
   map.add(graphicsLayer);
 
@@ -49,6 +51,41 @@ require([
       }
     }
   });
+
+  
+  function createSquare(center, halfSize) {
+  return [
+    [center.x - halfSize, center.y - halfSize],
+    [center.x + halfSize, center.y - halfSize],
+    [center.x + halfSize, center.y + halfSize],
+    [center.x - halfSize, center.y + halfSize],
+    [center.x - halfSize, center.y - halfSize]
+  ];
+}
+
+// 14.5" ~ 0.000003 degrees roughly at this latitude
+const coneHalfSize = 0.0000015; 
+const coneCenter = { x: -76.9497, y: 38.9862 }; // place anywhere
+
+const conePolygon = new Polygon({
+  rings: [createSquare(coneCenter, coneHalfSize)],
+  spatialReference: { wkid: 4326 }
+});
+
+const coneGraphic = new Graphic({
+  geometry: conePolygon,
+  symbol: {
+    type: "simple-fill",
+    color: [255, 165, 0, 0.9], // orange
+    outline: {
+      color: "white",
+      width: 1
+    }
+  }
+});
+
+graphicsLayer.add(coneGraphic);
+  //end new file
 
   graphicsLayer.add(squareGraphic);
 
