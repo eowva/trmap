@@ -101,15 +101,27 @@ const coneTemplateSymbol = {
   }
 };
 
-view.on("click", function(event) {
-  const point = event.mapPoint;
+const coneGraphics = [];
 
+view.on("click", function(event) {
   const newCone = new Graphic({
-    geometry: point,
+    geometry: event.mapPoint,
     symbol: coneTemplateSymbol
   });
-
   graphicsLayer.add(newCone);
+  coneGraphics.push(newCone);
+});
+
+document.getElementById("removeLastBtn").addEventListener("click", () => {
+  const lastCone = coneGraphics.pop();
+  if (lastCone) {
+    graphicsLayer.remove(lastCone);
+  }
+});
+
+document.getElementById("clearAllBtn").addEventListener("click", () => {
+  coneGraphics.length = 0;
+  graphicsLayer.removeAll();
 });
 
 
