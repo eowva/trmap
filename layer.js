@@ -124,22 +124,29 @@ document.getElementById("clearAllBtn").addEventListener("click", () => {
   graphicsLayer.removeAll();
 });
 
-// Save map view as image
-document.getElementById("saveImageBtn").addEventListener("click", () => {
-  view.takeScreenshot({ 
-    format: "png",
-    quality: 1
-  }).then(function(screenshot) {
+document.getElementById("saveImageBtn").addEventListener("click", async () => {
+  try {
+    const screenshot = await view.takeScreenshot({
+      format: "png",
+      quality: 1
+    });
 
-    // Create a temporary link element to trigger download
+    // create a link element to download the image
     const link = document.createElement("a");
     link.href = screenshot.dataUrl;
     link.download = "map_screenshot.png";
+
+    // for Firefox, append to DOM before clicking
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  });
+
+    console.log("Screenshot captured and download triggered!");
+  } catch (err) {
+    console.error("Screenshot failed:", err);
+  }
 });
+
 
 
   // graphicsLayer.add(squareGraphic);
