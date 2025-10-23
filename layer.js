@@ -124,6 +124,23 @@ document.getElementById("clearAllBtn").addEventListener("click", () => {
   graphicsLayer.removeAll();
 });
 
+// Save map view as image
+document.getElementById("saveImageBtn").addEventListener("click", () => {
+  view.takeScreenshot({ 
+    format: "png",
+    quality: 1
+  }).then(function(screenshot) {
+
+    // Create a temporary link element to trigger download
+    const link = document.createElement("a");
+    link.href = screenshot.dataUrl;
+    link.download = "map_screenshot.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+});
+
 
   // graphicsLayer.add(squareGraphic);
 
