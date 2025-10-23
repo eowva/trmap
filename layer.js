@@ -63,35 +63,53 @@ require([
 //   ];
 // }
 
-// Traffic cone as a marker (visible even at tiny real-world size)
-// Array of traffic cone positions
-const conePositions = [
-  { x: -76.950166, y: 38.985882 },
-  { x: -76.950851, y: 38.985882 },
-  { x: -76.950851, y: 38.985548 },
-  { x: -76.950166, y: 38.985548 }
-];
+// const conePositions = [
+//   { x: -76.950166, y: 38.985882 },
+//   { x: -76.950851, y: 38.985882 },
+//   { x: -76.950851, y: 38.985548 },
+//   { x: -76.950166, y: 38.985548 }
+// ];
 
-// Loop through the array and create a text-based marker for each cone
-conePositions.forEach(pos => {
-  const coneMarker = new Graphic({
-    geometry: {
-      type: "point",
-      x: pos.x,
-      y: pos.y,
-      spatialReference: { wkid: 4326 }
-    },
-    symbol: {
-      type: "text",    // ASCII method
-      text: "●",        // solid circle character
-      color: [255, 165, 0, 1], // orange
-      font: {
-        size: "14px",
-        family: "Arial"
-      }
-    }
+// conePositions.forEach(pos => {
+//   const coneMarker = new Graphic({
+//     geometry: {
+//       type: "point",
+//       x: pos.x,
+//       y: pos.y,
+//       spatialReference: { wkid: 4326 }
+//     },
+//     symbol: {
+//       type: "text",    // ASCII method
+//       text: "●",        // solid circle character
+//       color: [255, 165, 0, 1], // orange
+//       font: {
+//         size: "14px",
+//         family: "Arial"
+//       }
+//     }
+//   });
+//   graphicsLayer.add(coneMarker);
+// });
+
+const coneTemplateSymbol = {
+  type: "text",
+  text: "●",
+  color: [255, 165, 0, 1],
+  font: {
+    size: "14px",
+    family: "Arial"
+  }
+};
+
+view.on("click", function(event) {
+  const point = event.mapPoint;
+
+  const newCone = new Graphic({
+    geometry: point,
+    symbol: coneTemplateSymbol
   });
-  graphicsLayer.add(coneMarker);
+
+  graphicsLayer.add(newCone);
 });
 
 
