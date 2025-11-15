@@ -93,7 +93,7 @@ require([
 
 const coneTemplateSymbol = {
   type: "text",
-  text: "●",
+  text: "h",//"●",
   color: [255, 165, 0, 1],
   font: {
     size: "14px",
@@ -103,14 +103,28 @@ const coneTemplateSymbol = {
 
 const coneGraphics = [];
 
-view.on("click", function(event) {
+view.on("immediate-click", function(event) {
+  if (event.button === 2) {
+    view.hitTest(event).then(function(response) {
+      const graphic = response.results.find(r => r.graphic.layer === graphicsLayer)?.graphic;
+      if (graphic) {
+        graphicsLayer.remove(graphic);
+        const index = coneGraphics.indexOf(graphic);
+        if (index > -1) coneGraphics.splice(index, 1);
+      }
+    });
+    return;
+  }
+
   const newCone = new Graphic({
     geometry: event.mapPoint,
     symbol: coneTemplateSymbol
   });
+
   graphicsLayer.add(newCone);
   coneGraphics.push(newCone);
 });
+
 
 document.getElementById("removeLastBtn").addEventListener("click", () => {
   const lastCone = coneGraphics.pop();

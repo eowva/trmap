@@ -49,7 +49,7 @@
     }
     #viewDiv {
       width: 90vw;
-      height: 80vh;
+      height: calc(100vh - 240px);
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
@@ -80,7 +80,7 @@
     @media (max-width: 800px) {
       #viewDiv {
         width: 95vw;
-        height: 70vh;
+        height: calc(100vh - 220px);
       }
       button {
         width: 100%;
@@ -89,80 +89,195 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>Terps Racing Lot Map</h1>
   </header>
-  <p>Click anywhere on the map to place a cone.</p>
+
+  <p>Click to place a cone. Right click to delete.</p>
+
   <main>
     <div id="viewDiv"></div>
     <div id="controls">
       <button id="removeLastBtn">Remove Last Cone</button>
       <button id="clearAllBtn">Clear All Cones</button>
       <button id="saveImageBtn">Save As PNG</button>
+      <button id="movePitBtn">Move Pit</button>
+      <button id="measureBtn">Measure Distance</button>
     </div>
   </main>
+
   <script>
     require([
       "esri/Map",
       "esri/views/MapView",
       "esri/Graphic",
-      "esri/layers/GraphicsLayer"
-    ], function(Map, MapView, Graphic, GraphicsLayer) {
-      const map = new Map({
-        basemap: "streets"
-      });
+      "esri/layers/GraphicsLayer",
+      "esri/widgets/DistanceMeasurement2D"
+    ], function(Map, MapView, Graphic, GraphicsLayer, DistanceMeasurement2D) {
+
+      const map = new Map({ basemap: "streets" });
+
+      let measuring = false;
+
       const view = new MapView({
         container: "viewDiv",
         map: map,
         center: [-76.949682, 38.986166],
         zoom: 17
       });
+
       const graphicsLayer = new GraphicsLayer();
-      map.add(graphicsLayer);
+      const poleLayer = new GraphicsLayer();
+      const pitLayer = new GraphicsLayer();
+      map.addMany([poleLayer, pitLayer, graphicsLayer]);
+
+      const polePositions = [
+        { x: -76.951005, y: 38.986012},
+        { x: -76.950325, y: 38.986002},
+        { x: -76.951047, y: 38.985538},
+        { x: -76.950338, y: 38.985525}
+      ];
+
+      const poleSymbol = {
+        type: "text",
+        text: "●",
+        color: [0, 0, 0, 1],
+        font: { size: "20px", family: "Arial" }
+      };
+
+      polePositions.forEach(pos => {
+        poleLayer.add(new Graphic({
+          geometry: { type: "point", x: pos.x, y: pos.y, spatialReference: { wkid: 4326 }},
+          symbol: poleSymbol
+        }));
+      });
+
+      const pitPositions = [
+        [
+          [-76.950005, 38.986042],
+          [-76.949850, 38.986042],
+          [-76.949850, 38.985650],
+          [-76.950005, 38.985650],
+          [-76.950005, 38.986042]
+        ],
+        [
+          [-76.951225, 38.986180],
+          [-76.950090, 38.986162],
+          [-76.950093, 38.986062],
+          [-76.951228, 38.986080],
+          [-76.951225, 38.986180]
+        ]
+      ];
+
+      let currentPitIndex = 0;
+
+      const pitSymbol = {
+        type: "simple-fill",
+        color: [255, 0, 0, 0.2],
+        outline: { color: [255, 0, 0, 0.8], width: 2 }
+      };
+
+      let pitGraphic = new Graphic({
+        geometry: {
+          type: "polygon",
+          rings: pitPositions[currentPitIndex],
+          spatialReference: { wkid: 4326 }
+        },
+        symbol: pitSymbol
+      });
+
+      pitLayer.add(pitGraphic);
+
+      document.getElementById("movePitBtn").addEventListener("click", () => {
+        currentPitIndex = (currentPitIndex + 1) % pitPositions.length;
+        pitGraphic.geometry = {
+          type: "polygon",
+          rings: pitPositions[currentPitIndex],
+          spatialReference: { wkid: 4326 }
+        };
+      });
+
       const coneTemplateSymbol = {
         type: "text",
         text: "●",
         color: [255, 165, 0, 1],
-        font: {
-          size: "14px",
-          family: "Arial"
-        }
+        font: { size: "14px", family: "Arial" }
       };
+
       const coneGraphics = [];
-      view.on("click", function(event) {
-        const newCone = new Graphic({
-          geometry: event.mapPoint,
-          symbol: coneTemplateSymbol
+
+      view.on("immediate-click", function(event) {
+        if (measuring) return;
+        if (event.button === 2) {
+          event.stopPropagation();
+          view.hitTest(event).then(response => {
+            const graphic = response.results.find(r => r.graphic.layer === graphicsLayer)?.graphic;
+            if (graphic) {
+              graphicsLayer.remove(graphic);
+              const index = coneGraphics.indexOf(graphic);
+              if (index > -1) coneGraphics.splice(index, 1);
+            }
+          });
+          return;
+        }
+
+        view.hitTest(event).then(response => {
+          const hitPole = response.results.some(r => r.graphic.layer === poleLayer);
+          const hitPit = response.results.some(r => r.graphic.layer === pitLayer);
+          if (hitPole || hitPit) return;
+
+          const newCone = new Graphic({
+            geometry: event.mapPoint,
+            symbol: coneTemplateSymbol
+          });
+
+          graphicsLayer.add(newCone);
+          coneGraphics.push(newCone);
         });
-        graphicsLayer.add(newCone);
-        coneGraphics.push(newCone);
       });
+
+      let measurement = null;
+
+      document.getElementById("measureBtn").addEventListener("click", () => {
+        if (!measurement) {
+          measurement = new DistanceMeasurement2D({ view });
+          measurement.viewModel.unit = "feet";
+          view.ui.add(measurement, "top-right");
+          measurement.viewModel.start();
+          measuring = true;
+          document.getElementById("measureBtn").innerText = "Stop Measuring";
+        } else {
+          view.ui.remove(measurement);
+          measurement.destroy();
+          measurement = null;
+          document.getElementById("measureBtn").innerText = "Measure Distance";
+        }
+      });
+
       document.getElementById("removeLastBtn").addEventListener("click", () => {
         const lastCone = coneGraphics.pop();
         if (lastCone) graphicsLayer.remove(lastCone);
       });
+
       document.getElementById("clearAllBtn").addEventListener("click", () => {
         coneGraphics.length = 0;
         graphicsLayer.removeAll();
       });
+
       document.getElementById("saveImageBtn").addEventListener("click", async () => {
         try {
-          const screenshot = await view.takeScreenshot({
-            format: "png",
-            quality: 1
-          });
+          const screenshot = await view.takeScreenshot({ format: "png", quality: 1 });
           const link = document.createElement("a");
           link.href = screenshot.dataUrl;
           link.download = "map_screenshot.png";
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          console.log("Screenshot captured and download triggered!");
-        } catch (err) {
-          console.error("Screenshot failed:", err);
-        }
+        } catch (err) {}
       });
+
     });
   </script>
 </body>
