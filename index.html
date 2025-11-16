@@ -252,7 +252,10 @@
           view.ui.remove(measurement);
           measurement.destroy();
           measurement = null;
+          measuring = false;
           document.getElementById("measureBtn").innerText = "Measure Distance";
+          view.container.style.pointerEvents = "auto";
+          view.focus();
         }
       });
 
